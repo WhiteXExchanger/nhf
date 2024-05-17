@@ -8,13 +8,12 @@
 #define TESZTELES
 
 #ifdef TESZTELES
+
 int main() {
     Model m(cout);
-    m.add(EComponent::AndG,1);
-    m.add(EComponent::AndG,2);
-    m.remove(2);
     m.drawComponentTree();
 }
+
 #endif
 
 #ifdef CPORTA
@@ -53,4 +52,7 @@ int main() {
 
     return 0;
 }
+
+// Fileból olvasott modellen futattjuk a téglákat
+
 #endif
