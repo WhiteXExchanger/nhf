@@ -1,28 +1,60 @@
 // model.h
 #pragma once
-
-#include <stdlib.h>
+#include <iostream>
 #include "component.h"
-#include "ecomponent.h"
 
+/**
+ * @class Model
+ * @brief Represents a model containing multiple components.
+ */
 class Model {
 public:
-    // Egy mélység és felfedezési sorrend (BFS) meghatározott sorrendiség 
-    // szerint lehet megjelölni melyik előző elemhez csaklakozzon.
-    // PL: ha A - B, A - C a fa struktúrája:
-    //      A-1               - Legfelső sorba rajzolja ki mert mélysége 0 ID-je: 1 mert ő volt az első megtalált elem ("Legfelül" minig a riasztó van) 
-    //  B-2     C-3           - Második sor mert mélységük 1, ID-jük: 2 és 3 azaz ők voltak a következő elemek
+    /**
+     * @brief Constructs a model and initializes the output stream.
+     * @param os The output stream for the model.
+     */
+    Model(std::ostream& os);
 
-    Model(ostream& os) : os(os) {}
-    bool add(EComponent, size_t);       // Hozzáad egy új komponenst a fához
-    bool remove(size_t);                // Eltávolít egy komponenst a fából
-    bool modify(EComponent ec, size_t i);                // Lecserél egy komponenst (ha új értéket szeretnénk beállítani egy komponensnek is ezt kell használni)
-    bool testModel(Brick);                  // Leteszteli a modellt a beadott téglával
-    void simulate(size_t n);                // Létrehoz egy téglákkal teli tömböt véletlenszerű adatokkal és leteszteli azokkal a modellt 
-    void drawSimulation();                  // Megrajzolja mi történik a futószallagonű
-    void drawComponentTree();
+    /**
+     * @brief Loads the model from an input stream.
+     * @param is The input stream to load from.
+     */
+    void load(std::istream& is);
+
+    /**
+     * @brief Saves the model to an output stream.
+     * @param os The output stream to save to.
+     */
+    void save(std::ostream& os) const;
+
+    /**
+     * @brief Tests the model with the given brick.
+     * @param brick The brick to test with.
+     * @return True if the test is successful, otherwise false.
+     */
+    bool testModel(Brick brick) const;
+
+    /**
+     * @brief Simulates the model with a random set of bricks.
+     * @param count The number of bricks to simulate with.
+     */
+    void simulate(size_t count) const;
+
+    /**
+     * @brief Destructor for the Model class.
+     */
+    ~Model();
+
+protected:
+    /**
+     * @brief Draws the simulation of the conveyor belt.
+     * @param status The result of the current simulation.
+     * @param brick The brick which the simulation is drawn for.
+     */
+    void drawSimulation(bool status, Brick brick) const;
 
 private:
-    ostream& os;
-    Component alarm;
+    std::vector<Component*> allComps; ///< All components in the model.
+    std::ostream& os; ///< Output stream for the model.
+    Component alarm; ///< Alarm component, the root of all other components.
 };

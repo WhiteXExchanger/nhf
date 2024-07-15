@@ -1,29 +1,56 @@
 // component.h
 #pragma once
-
 #include <queue>
 #include <vector>
 #include <iostream>
 #include "brick.h"
-#include "ecomponent.h"
 
 using namespace std;
 
+/**
+ * @class Component
+ * @brief Base class for components.
+ */
 class Component {
 public:
-    Component() : id(1) {}
-    Component(size_t id) : id(id) {}
-    virtual bool test(Brick);                   // Leteszteli az adott téglával az ebbe belekötött komponensek állapotát, végül beállítja ennek az állapotát
-    void add(EComponent, size_t);              // A fában lefele átad egy komponenst hogy hozzáadja az adott i-edik komponensnek
-    bool insert(EComponent, size_t, size_t);
-    bool remove(size_t, Component*);
-    void cleanup(Component*);
-    ostream& write(ostream&);
-    void setID(size_t id = 1);
-    size_t max() const;
-    virtual ~Component();
+    /**
+     * @brief Tests the connected components with the given brick and returns the state of those tests with its own behaviour.
+     * @param brick The brick to test with.
+     * @return True if the test is successful, otherwise false.
+     */
+    virtual bool test(Brick) const;
+
+    /**
+     * @brief Adds a component to the node next components list.
+     * @param component Pointer to the component to be added.
+     */
+    void add(Component*);
+
+    /**
+     * @brief Saves the state of the component to an output stream.
+     * @param os The output stream to save to.
+     */
+    virtual void save(ostream&) const;
+
+    /**
+     * @brief Gets the indexes of the child components in the collection.
+     * @param collection The collection of components.
+     * @return A vector of indexes.
+     */
+    vector<size_t> indexesInCollection(const vector<Component*>&) const;
+
+    /**
+     * @brief Destructs component 
+     */
+    virtual ~Component() {}
+
+protected:
+    /**
+     * @brief Gets the components connected to this component.
+     * @return A reference to the vector of components.
+     */
+    const std::vector<Component*>& getComps() const;
+
 private:
-    size_t id;
-    vector<Component*> comps;              // Komponensek amik beállítják ennek a komponensnek az állapotát
-    bool status;                                // Komponens állapota
+    vector<Component*> comps;
 };
